@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package poo.Evento.gui;
+package poo.gui;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import poo.iccr.Evento.Evento;
+
+import poo.evento.*;
 
 /**
  *
@@ -329,52 +330,54 @@ public class FrmEvento extends javax.swing.JFrame {
             String nombreCliente=txtNombre.getText().toUpperCase();
             String apellidoCliente=txtApellido.getText().toUpperCase();
             int contacto=Integer.parseInt(txtContactoCliente.getText());
-            e= new Evento(responsable, niños, adultos, apellidoCliente, nombreCliente, contacto);
+            e= new Evento(responsable, niños, adultos, new Cliente(nombreCliente,apellidoCliente,contacto));
             if (rbtFormal.isSelected()) {
-                e.setTematica("Formal");
+                e.setTematica(Tematica.FORMAL);
             }
             if (rbtInformal.isSelected()) {
-                e.setTematica("Informal");
+                e.setTematica(Tematica.INFORMAL);
             }
             if (rbtDiurno.isSelected()) {
-                e.setTipoEvento("Diurno");
+                e.setTipoEvento(TipoEvento.DIURNO);
             }
             if (rbtNocturno.isSelected()) {
-                e.setTipoEvento("Nocturno");
+                e.setTipoEvento(TipoEvento.NOCTURNO);
             }
             
            String[] servicioSeleccionado = new String[5];
         if (chkAnimacion.isSelected()) {
-            servicioSeleccionado[0] = "Animacion";
+            //servicioSeleccionado[0] = "Animacion";
+            e.seleccionarServicio(Servicio.ANIMACION);
         }
 
         if (chkCocteleria.isSelected()) {
-            servicioSeleccionado[1] = "Cocteleria";
+            //servicioSeleccionado[1] = "Cocteleria";
+            e.seleccionarServicio(Servicio.COCTELERIA);
         }
 
         if (chkEquipoSonido.isSelected()) {
-            servicioSeleccionado[2] = "Equipo de Sonido";
+            //servicioSeleccionado[2] = "Equipo de Sonido";
+            e.seleccionarServicio(Servicio.EQUIPO_SONIDO);
         }
 
         if (chkMenajePremium.isSelected()) {
-            servicioSeleccionado[3] = "Menaje Premium";
+            //servicioSeleccionado[3] = "Menaje Premium";
+            e.seleccionarServicio(Servicio.MENAJE_PREMIUM);
         }
-        e.setServicios(servicioSeleccionado);
+        //e.setServiciosSeleccionados(servicioSeleccionado);
          
-         e.salonAsignado();
-         e.Comida();
-         e.numeroServicios();
-         e.calculaPrecio();
-         if(e.getAsistentesTotales()<15 || e.getAsistentesTotales()>60 ){
+         e.generarEvento();
+
+         if(e.calcularAsistentesTotales()<15 || e.calcularAsistentesTotales()>60 ){
          throw new Exception("Numero incorrecto de asistentes");
                  }
          
         txtResultado.append("\n" + e.toString());
         DefaultTableModel modelo= (DefaultTableModel)tblDatos.getModel();
         
-        String[] fila={responsable,String.valueOf(niños+adultos),apellidoCliente+" "
-                +nombreCliente,String.valueOf(contacto),e.getTipoEvento()
-        ,e.getTematica(),e.presentarServicios(),e.getSalon(),String.valueOf(e.getPrecio()),
+        String[] fila={e.getResponsable(), String.valueOf(niños+adultos),apellidoCliente+" "
+                +nombreCliente,String.valueOf(contacto),e.getTipoEvento().getNombre()
+        ,e.getTematica().getNombre(),e.presentarServicios(),e.getSalon().getNombre(),String.valueOf(e.getPrecio()),
         String.valueOf(niños*12),String.valueOf(adultos*25)};
         
         modelo.addRow(fila);
