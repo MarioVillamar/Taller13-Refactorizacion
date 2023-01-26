@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author LabP4107
  */
 public class Evento {
